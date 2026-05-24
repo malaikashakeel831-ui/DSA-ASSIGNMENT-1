@@ -14,21 +14,25 @@ struct Token {
     TokenType type;
     string    value;
 };
-
+//check if bracket is opening bracket
 bool isOpenBracket (const string& s) { return s=="(" || s=="[" || s=="{"; }
+//check if bracket is closing bracket
 bool isCloseBracket(const string& s) { return s==")" || s=="]" || s=="}"; }
+//check if opening and closing brackets match
 bool isMatchingPair(const string& open, const string& close) {
     return (open=="(" && close==")") ||
            (open=="[" && close=="]") ||
            (open=="{" && close=="}");
 }
+//return operator precedence
 int precedence(const string& op) {
     if (op=="*" || op=="/") return 2;
     if (op=="+" || op=="-") return 1;
     return 0;
 }
+//check whether token is operand
 bool isOperand(const Token& t) { return t.type==NUMBER || t.type==VARIABLE; }
-
+//convert input expressions into tokens
 vector<Token> tokenize(const string& expr) {
     vector<Token> tokens;
     size_t i = 0;
@@ -59,7 +63,7 @@ vector<Token> tokenize(const string& expr) {
     }
     return tokens;
 }
-
+//validate expression syntax
 void validateSyntax(const vector<Token>& t) {
     if (t.empty()) { cerr << "Syntax error: empty expression\n"; exit(1); }
 
@@ -127,7 +131,7 @@ void validateSyntax(const vector<Token>& t) {
         }
     }
 }
-
+//convert infix expression to postfix
 vector<Token> toPostfix(const vector<Token>& tokens) {
     vector<Token> output;
     stack<Token>  ops;
@@ -171,7 +175,7 @@ vector<Token> toPostfix(const vector<Token>& tokens) {
     }
     return output;
 }
-
+//collect all variables from expression
 vector<string> collectVariables(const vector<Token>& tokens) {
     vector<string> vars;
     for (const Token& t : tokens) {
@@ -183,7 +187,7 @@ vector<string> collectVariables(const vector<Token>& tokens) {
     }
     return vars;
 }
-
+//evaluate postfix expression using stack
 double evaluate(const vector<Token>& postfix, const map<string,double>& varValues) {
     stack<double> stk;
     for (const Token& tok : postfix) {
@@ -215,7 +219,7 @@ double evaluate(const vector<Token>& postfix, const map<string,double>& varValue
     if (stk.size() != 1) { cerr << "Runtime error: malformed expression\n"; exit(2); }
     return stk.top();
 }
-
+//Main function
 int main() {
     string expr;
     if (!getline(cin, expr)) {
